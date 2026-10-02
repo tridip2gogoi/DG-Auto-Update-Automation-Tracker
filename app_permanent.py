@@ -1384,6 +1384,25 @@ CSV Download: সকলো ডাটা একেলগে এক্সেল �
 
 আপুনি এই app.py ফাইলটো আপোনাৰ GitHub ৰেপ’জিটৰীত আপলোড কৰিলেই Streamlit এপত সকলো আপডেট লাইভ হৈ যাব!
 
+Apunar screenshot toote dekha goise je python file t curly quote (’) byabahাৰ হোৱাৰ বাবে SyntaxError aahi thile. Moi ei bhul to sampurnarupe thik kori ekti notun app.py file banai disu.
+
+Apunar notun app.py file to ready ase:
+
+PY icon
+app
+ PY 
+ZIP package to download koribo parileo:
+
+ZIP icon
+telecom_noc_fixed
+ ZIP 
+Kimaan Ki Thik Kora Hol (What was fixed):
+Python script ot thoka sob curved quotes (’) ghosai standard straight quotes (') bohuwa hoise, jate kono syntax error nahoye.
+
+selectbox r format function ot thoka bug to thik kora hoise.
+
+Apunar GitHub repository t ei notun app.py file to commit/upload kori dilei Streamlit error to ghoi যাব aaru portal to sundorkoi run hobo!
+
 
 
 
@@ -1425,15 +1444,14 @@ def save_data(records):
     with open(DATA_FILE, 'w', encoding='utf-8') as f:
         json.dump(records, f, ensure_ascii=False, indent=4)
 
-st.title("🗼 Telecom NOC Operations & Docket Portal (Add & Edit Live)")
+st.title("Telecom NOC Operations & Docket Portal (Add & Edit Live)")
 
 records = load_data()
 
-# Navigation tabs or buttons for Add vs Edit
 menu = st.sidebar.radio("Navigation", ["Dashboard & View / Edit", "Add New Site Record"])
 
 if menu == "Add New Site Record":
-    st.header("➕ Add New Site & Docket Record")
+    st.header("Add New Site & Docket Record")
     with st.form("add_form"):
         col1, col2, col3, col4 = st.columns(4)
         with col1:
@@ -1477,13 +1495,12 @@ if menu == "Add New Site Record":
                 st.error("Please fill all mandatory fields (SAIP ID, JC, State, Supervisor Name).")
 
 else:
-    st.header("📋 Live Records Dashboard (Search, Edit & Delete)")
+    st.header("Live Records Dashboard (Search, Edit & Delete)")
     
     if len(records) == 0:
         st.info("No records found. Please add a new record from the sidebar.")
     else:
-        # Search filter
-        search_query = st.text_input("🔍 Search by SAIP ID, State, Supervisor, or Docket:", "")
+        search_query = st.text_input("Search by SAIP ID, State, Supervisor, or Docket:", "")
         
         filtered_records = records
         if search_query:
@@ -1493,20 +1510,18 @@ else:
 
         st.write(f"Showing **{len(filtered_records)}** of **{len(records)}** total records.")
 
-        # Display as an interactive editable table or selectbox for editing
         selected_index = st.selectbox(
             "Select a Site Record to Edit or Delete:",
             options=range(len(filtered_records)),
-            format_func=lambda i: f"SAIP ID: {filtered_records[i]['get']('saipId', 'N/A')} | State: {filtered_records[i].get('state', 'N/A')} | Supervisor: {filtered_records[i].get('supervisorName', 'N/A')}"
+            format_func=lambda i: f"SAIP ID: {filtered_records[i].get('saipId', 'N/A')} | State: {filtered_records[i].get('state', 'N/A')} | Supervisor: {filtered_records[i].get('supervisorName', 'N/A')}"
         )
 
         if selected_index is not None and len(filtered_records) > 0:
             actual_record = filtered_records[selected_index]
-            # Find original index in full records list
             orig_index = records.index(actual_record)
 
             with st.form("edit_form"):
-                st.subheader(f"✏️ Editing Record: {actual_record.get('saipId', '')}")
+                st.subheader(f"Editing Record: {actual_record.get('saipId', '')}")
                 col1, col2, col3, col4 = st.columns(4)
                 
                 with col1:
@@ -1532,9 +1547,9 @@ else:
 
                 col_btn1, col_btn2 = st.columns(2)
                 with col_btn1:
-                    update_btn = st.form_submit_button("💾 Save Updates")
+                    update_btn = st.form_submit_button("Save Updates")
                 with col_btn2:
-                    delete_btn = st.form_submit_button("🗑️ Delete This Record")
+                    delete_btn = st.form_submit_button("Delete This Record")
 
                 if update_btn:
                     records[orig_index] = {
@@ -1556,14 +1571,13 @@ else:
                     st.rerun()
 
         st.divider()
-        st.subheader("📊 Complete Master Data Table")
+        st.subheader("Complete Master Data Table")
         df = pd.DataFrame(records)
         st.dataframe(df, use_container_width=True)
 
-        # CSV Download Button
         csv_data = df.to_csv(index=False).encode('utf-8')
         st.download_button(
-            label="📥 Download Master Data as CSV",
+            label="Download Master Data as CSV",
             data=csv_data,
             file_name="telecom_noc_master_records.csv",
             mime="text/csv",
